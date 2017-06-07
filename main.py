@@ -3,6 +3,7 @@
 from tkinter import *
 from smtplib import SMTP_SSL,SMTPRecipientsRefused,SMTPAuthenticationError
 from email.mime.text import MIMEText
+from tkinter import messagebox
 
 class Entry_grid(object):
 	def __init__(self,parent_window,num_rows,num_cols):
@@ -121,8 +122,10 @@ class Add_jeep_window(object):
 		self.room_input.place(x = 220, y = 150, width=100)
 
 	def add_lr(self):
-		self.left = Radiobutton(self.window, text="Left", value=1).place(x = 340, y = 150, width = 50)
-		self.right = Radiobutton(self.window, text="Right", value=2).place(x =410, y = 150, width = 50)
+		self.left_var = IntVar()
+		self.right_var = IntVar()
+		self.left = Radiobutton(self.window, variable=self.left_var, text="Left", value=1).place(x = 340, y = 150, width = 50)
+		self.right = Radiobutton(self.window,variable=self.right_var,text="Right",value=2).place(x = 410, y = 150, width = 50)
 
 	def add_jeep(self):
 		self.jeep_label = Label(self.window,text="Jeep Number")
@@ -143,10 +146,17 @@ class Add_jeep_window(object):
 		self.destination_input.place(x=220,y=300,width = 100)
 
 	def submit_func(self):
-		LR = 'L'
+		if (self.left_var.get() == 1):
+			LR = 'L'
+		else:
+			LR = 'R'
+		if self.name_input.get() == "" or self.email_input.get() == "" or self.jeep_input.get() == "" or self.driver_input.get() == "" or self.destination_input.get() == "":
+			messagebox.showerror("Empty Fields","One or more fields are empty. Please fill up everything")
+			return
+
 		self.parent_window.detail_list.append([self.name_input.get(), self.email_input.get(), self.wada_variable.get(),self.room_variable.get() + LR,self.jeep_input.get(), self.driver_input.get(),self.destination_input.get()])
 		self.parent_window.details_grid.create_row()
-		self.parent_window.populate_last_row()
+		self.parent_window.display_details(-1)
 		#self.parent_window.send_email(-1)
 		self.window.destroy()
 	
@@ -179,13 +189,12 @@ class Main_window(object):
 		self.detail_list = [["Name","Email","Wada","Room","Jeep no.","Driver","Destination"],["Sangya", "trishutiwari@gmail.com", "1", "8L", "190A", "Surendre","Pune Phoenix mall"], ["Spandan", "spandan@muwci.edu", "1", "7L","1765", "Chandan", "Nepal"]]
 		
 		self.details_grid = Entry_grid(self,3,7)
-		self.display_details()
+
+		for i in range(self.details_grid.num_rows):
+			self.display_details(i)
 
 		self.window.mainloop()
 
-	def populate_last_row(self):
-		#takes the elements stored in the last list of self.detail_list and populates the last row of the entrygrid
-		pass
 	
 	def send_email(self,index):
 		details = self.detail_list[index]
@@ -212,12 +221,12 @@ class Main_window(object):
 			try:
 				pipeline.login(sender,password)
 			except SMTPAuthenticationError as e:
-				tkMessageBox.showerror("Authentication Failure","Could not login to {0}".format(sender))
+				messagebox.showerror("Authentication Failure","Could not login to {0}".format(sender))
 				return
 			try:
 				pipeline.sendmail(sender,recievers,msg.as_string())
 			except SMTPRecipientsRefused as e:
-				tkMessageBox.showerror("Email Not Sent","Could not send emails to {0}".format(", ".join(e.keys())))
+				messagebox.showerror("Email Not Sent","Could not send emails to {0}".format(", ".join(e.keys())))
 				return
 		
 	def add_to_list(self):
@@ -237,10 +246,9 @@ class Main_window(object):
 		self.details_grid.delete_row()
 		
 	
-	def display_details(self):
-		for i in range(self.details_grid.num_rows):
-			for j in range(self.details_grid.num_cols):
-				self.details_grid.grid_list[i][j].insert(0,self.detail_list[i][j])
+	def display_details(self,row):
+		for j in range(self.details_grid.num_cols):
+			self.details_grid.grid_list[row][j].insert(0,self.detail_list[row][j])
 		
 		
 		
