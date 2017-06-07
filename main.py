@@ -251,7 +251,7 @@ class Main_window(object):
 	def add_to_list(self):
 		try:
 			with open("jeep_details.txt",'r') as fhandler: 
-				lines = fhandler.readlines()
+				lines = fhandler.read().splitlines()
 				self.num_rows = len(lines)
 				if lines:
 					for line in lines:
@@ -268,16 +268,16 @@ class Main_window(object):
 			self.save_to_file()
 			self.window.destroy()
 			try:
-				self.add_jeep.window.destroy()
+				self.add_jeep_window.window.destroy()
 			except Exception:
 				pass
 				
 	def save_to_file(self):
+		#should take everything from the detail_list and write it to a file
 		with open("jeep_details.txt",'w') as fhandler: 
 			for line in self.detail_list:
 				l="$#$ ".join(line)
 				fhandler.write(l+"\n")
-		#should take everything from the detail_list and write it to a file
 
 	def add_jeep_func(self):
 		#call back function for self.add_jeep
