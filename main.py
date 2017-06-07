@@ -165,6 +165,7 @@ class Add_jeep_window(object):
 class Main_window(object):
 	def __init__(self):
 		self.window = Tk()
+		self.window.protocol("WM_DELETE_WINDOW",self.on_close )
 		self.width = 1280
 		self.height = 700
 
@@ -173,7 +174,6 @@ class Main_window(object):
 		self.cwgt=Canvas(self.window)
 		self.cwgt.place(x=0,y=0,width=self.width,height=self.height)
 		self.cwgt.create_image(0, 0, anchor=NW, image=self.bk)
-
 
 		self.window.geometry("{0}x{1}".format(self.width,self.height))
 		self.window.resizable(width=False, height=False)
@@ -233,9 +233,22 @@ class Main_window(object):
 		pass
 		#should read from a file and adds everything to the detail_list.
 		#for now, just manually insert everything
+	
+	def on_close(self):
+		 if (messagebox.askokcancel("Quit", "Do you want to quit?")):
+			self.save_to_file()
+        		self.window.destroy()
+			try:
+				self.add_jeep.window.destroy()
+			except Exception:
+				pass
+				
 				
 	def save_to_file(self):
-		pass
+		with open("jeep_details.txt",'w') as fhandler: 
+			for line in self.detail_list:
+				"$#$ ".join(line)
+				fhandler.write(line+"\n")
 		#should take everything from the detail_list and write it to a file
 
 	def add_jeep_func(self):
