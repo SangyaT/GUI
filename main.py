@@ -4,6 +4,7 @@ from tkinter import *
 from smtplib import SMTP_SSL,SMTPRecipientsRefused,SMTPAuthenticationError
 from email.mime.text import MIMEText
 from tkinter import messagebox
+import os
 
 class Entry_grid(object):
 	def __init__(self,parent_window,num_rows,num_cols):
@@ -76,9 +77,7 @@ class Add_jeep_window(object):
 	def __init__(self,parent_window):
 		self.parent_window = parent_window
 
-		self.window = Tk()
-		self.window.geometry("500x500")
-		self.window.resizable(width=False, height=False)
+		self.create_add_jeep_window()
 
 		self.add_wada()	
 		self.add_room()
@@ -92,6 +91,10 @@ class Add_jeep_window(object):
 		self.submit = Button(self.window,text = 'Submit', command = self.submit_func)
 		self.submit.place(x=220, y=400, width = 100)
 	
+	def create_add_jeep_window(self):
+		self.window = Tk()
+		self.window.geometry("500x500")
+		self.window.resizable(width=False, height=False)
 
 	def add_name(self):
 		self.name_label = Label(self.window,text="Student Name")
@@ -164,10 +167,28 @@ class Add_jeep_window(object):
 
 class Main_window(object):
 	def __init__(self):
+		self.create_main_window()
+		self.create_add_jeep_button()
+		self.create_del_jeep_button()
+		self.create_save_file_button()
+		
+		self.detail_list = list()
+		self.add_to_list()
+		
+		self.details_grid = Entry_grid(self,self.num_rows,self.num_cols)
+
+		for i in range(self.details_grid.num_rows):
+			self.display_details(i)
+
+		self.window.mainloop()
+
+	def create_main_window(self):
 		self.window = Tk()
 		self.window.protocol("WM_DELETE_WINDOW",self.on_close )
 		self.width = 1280
 		self.height = 700
+		self.num_rows = 0
+		self.num_cols = 7
 
 		self.bk = PhotoImage(file="bk.gif")
 		self.bk = self.bk.zoom(2,2)
@@ -178,24 +199,22 @@ class Main_window(object):
 		self.window.geometry("{0}x{1}".format(self.width,self.height))
 		self.window.resizable(width=False, height=False)
 
+	def create_add_jeep_button(self):
 		self.add_jeep = Button(self.window, text = 'Add a jeep', command = self.add_jeep_func,fg="white")
 		self.add_jeep.configure(background="#000000")
-		self.add_jeep.place(x = 480, y = self.height - 100, width = 100)
+		self.add_jeep.place(x = 450, y = self.height - 100, width = 100)
 
+	def create_del_jeep_button(self):
 		self.del_jeep = Button(self.window, text = 'Delete a jeep', command = self.del_jeep_func,fg="white")
 		self.del_jeep.configure(background="#000000")
-		self.del_jeep.place(x = 600, y = self.height - 100, width = 100)
-		
-		self.detail_list = [["Name","Email","Wada","Room","Jeep no.","Driver","Destination"],["Sangya", "trishutiwari@gmail.com", "1", "8L", "190A", "Surendre","Pune Phoenix mall"], ["Spandan", "spandan@muwci.edu", "1", "7L","1765", "Chandan", "Nepal"]]
-		
-		self.details_grid = Entry_grid(self,3,7)
+		self.del_jeep.place(x = 570, y = self.height - 100, width = 100)
 
-		for i in range(self.details_grid.num_rows):
-			self.display_details(i)
+	def create_save_file_button(self):
+		self.save_file = Button(self.window, text = 'Save file', command = self.save_to_file,fg="white")
+		self.save_file.configure(background="#000000")
+		self.save_file.place(x = 690, y = self.height - 100, width = 100)
 
-		self.window.mainloop()
 
-	
 	def send_email(self,index):
 		details = self.detail_list[index]
 		recievers = details[1].split(",")
@@ -230,14 +249,23 @@ class Main_window(object):
 				return
 		
 	def add_to_list(self):
-		pass
+		try:
+			with open("jeep_details.txt",'r') as fhandler: 
+				lines = fhandler.readlines()
+				self.num_rows = len(lines)
+				if lines:
+					for line in lines:
+						self.detail_list.append(line.split("$#$ "))
+				else:
+					self.detail_list.append(["Name","Email","Wada","Room","Jeep no.","Driver","Destination"])
+		except Exception:
+			os.system("touch jeep_details.txt")
 		#should read from a file and adds everything to the detail_list.
-		#for now, just manually insert everything
 	
 	def on_close(self):
-		 if (messagebox.askokcancel("Quit", "Do you want to quit?")):
+		if (messagebox.askokcancel("Quit", "Do you want to quit?")):
 			self.save_to_file()
-        		self.window.destroy()
+			self.window.destroy()
 			try:
 				self.add_jeep.window.destroy()
 			except Exception:
@@ -247,8 +275,8 @@ class Main_window(object):
 	def save_to_file(self):
 		with open("jeep_details.txt",'w') as fhandler: 
 			for line in self.detail_list:
-				"$#$ ".join(line)
-				fhandler.write(line+"\n")
+				l="$#$ ".join(line)
+				fhandler.write(l+"\n")
 		#should take everything from the detail_list and write it to a file
 
 	def add_jeep_func(self):
