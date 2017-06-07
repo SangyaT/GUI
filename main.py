@@ -67,11 +67,15 @@ class Entry_grid(object):
 				self.check_box_list[i].destroy()
 				del self.check_box_list[i]
 				break
+		if del_row == 0:
+			messagebox.showerror("No Selection","You have not selected anything to delete.")
+			return
 		#search for destroy all cells that are at row i+1
 		for i in self.grid_list[del_row]:
 			i.destroy()
 
 		del self.grid_list[del_row]
+		del self.parent_window.detail_list[del_row] #delete the details from the details list as well
 	
 class Add_jeep_window(object):
 	def __init__(self,parent_window):
@@ -79,13 +83,13 @@ class Add_jeep_window(object):
 
 		self.create_add_jeep_window()
 
+		self.add_name()
 		self.add_wada()	
 		self.add_room()
 		self.add_lr()
 		self.add_jeep()
 		self.add_driver()
-		self.add_destination()
-		self.add_name()
+		self.add_destination()		
 		self.add_email()
 
 		self.submit = Button(self.window,text = 'Submit', command = self.submit_func)
@@ -104,60 +108,55 @@ class Add_jeep_window(object):
 	
 	def add_email(self):
 		self.email_label = Label(self.window,text="Student Email")
-		self.email_label.place(x= 50,y =350, width = 100)
+		self.email_label.place(x= 50,y =100, width = 100)
 		self.email_input = Entry(self.window, bd =5)
-		self.email_input.place(x=220,y=350, width = 100)
+		self.email_input.place(x=220,y=100, width = 100)
 		
 	def add_wada(self):
 		self.wada_label = Label(self.window,text="Wada No.")
-		self.wada_label.place(x = 50, y = 100, width = 100)
+		self.wada_label.place(x = 50, y = 150, width = 100)
 		self.wada_variable = StringVar(self.window)
 		self.wada_variable.set("1") # default value
 		self.wada_input = OptionMenu(self.window, self.wada_variable, "1", "2", "3","4","5")
-		self.wada_input.place(x = 220, y = 100, width = 100 )
+		self.wada_input.place(x = 220, y = 150, width = 100 )
 
 	def add_room(self):
 		self.room_label = Label(self.window,text="Room")
-		self.room_label.place(x = 50, y = 150, width=100)
+		self.room_label.place(x = 50, y = 200, width=100)
 		self.room_variable = StringVar(self.window)
 		self.room_variable.set("1") 
 		self.room_input = OptionMenu(self.window, self.room_variable, "1", "2", "3", "4", "5", "6","7", "8", "9","10","11","12","13","14","15")
-		self.room_input.place(x = 220, y = 150, width=100)
+		self.room_input.place(x = 220, y = 200, width=100)
 
 	def add_lr(self):
-		self.left_var = IntVar()
-		self.right_var = IntVar()
-		self.left = Radiobutton(self.window, variable=self.left_var, text="Left", value=1).place(x = 340, y = 150, width = 50)
-		self.right = Radiobutton(self.window,variable=self.right_var,text="Right",value=2).place(x = 410, y = 150, width = 50)
+		self.radio_var = StringVar(master=self.window)
+		self.left = Radiobutton(self.window, variable=self.radio_var,value="L", text="Left").place(x = 340, y = 200, width = 50)
+		self.right = Radiobutton(self.window,variable=self.radio_var,value="R", text="Right").place(x = 410, y = 200, width = 50)
 
 	def add_jeep(self):
 		self.jeep_label = Label(self.window,text="Jeep Number")
-		self.jeep_label.place(x = 50,y=200,width = 100) 	
+		self.jeep_label.place(x = 50,y=250,width = 100) 	
 		self.jeep_input = Entry(self.window, bd =5)
-		self.jeep_input.place(x=220, y=200, width = 100)
+		self.jeep_input.place(x=220, y=250, width = 100)
 
 	def add_driver(self):
 		self.driver_label = Label(self.window,text="Driver Name")
-		self.driver_label.place(x = 50,y=250,width = 100) 	
+		self.driver_label.place(x = 50,y=300,width = 100) 	
 		self.driver_input = Entry(self.window, bd =5)
-		self.driver_input.place(x=220,y=250,width =100)
+		self.driver_input.place(x=220,y=300,width =100)
 
 	def add_destination(self):
 		self.destination_label = Label(self.window,text="Destination")
-		self.destination_label.place(x = 50, y=300, width = 100)
+		self.destination_label.place(x = 50, y=350, width = 100)
 		self.destination_input = Entry(self.window, bd =5)
-		self.destination_input.place(x=220,y=300,width = 100)
+		self.destination_input.place(x=220,y=350,width = 100)
 
 	def submit_func(self):
-		if (self.left_var.get() == 1):
-			LR = 'L'
-		else:
-			LR = 'R'
 		if self.name_input.get() == "" or self.email_input.get() == "" or self.jeep_input.get() == "" or self.driver_input.get() == "" or self.destination_input.get() == "":
 			messagebox.showerror("Empty Fields","One or more fields are empty. Please fill up everything")
 			return
 
-		self.parent_window.detail_list.append([self.name_input.get(), self.email_input.get(), self.wada_variable.get(),self.room_variable.get() + LR,self.jeep_input.get(), self.driver_input.get(),self.destination_input.get()])
+		self.parent_window.detail_list.append([self.name_input.get(), self.email_input.get(), self.wada_variable.get(),self.room_variable.get() + self.radio_var.get(),self.jeep_input.get(), self.driver_input.get(),self.destination_input.get()])
 		self.parent_window.details_grid.create_row()
 		self.parent_window.display_details(-1)
 		#self.parent_window.send_email(-1)
