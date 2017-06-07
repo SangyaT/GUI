@@ -112,7 +112,7 @@ class Add_jeep_window(object):
 		self.wada_label = Label(self.window,text="Wada No.")
 		self.wada_label.place(x = 50, y = 100, width = 100)
 		self.wada_variable = StringVar(self.window)
-		self.wada_variable.set("one") # default value
+		self.wada_variable.set("1") # default value
 		self.wada_input = OptionMenu(self.window, self.wada_variable, "1", "2", "3","4","5")
 		self.wada_input.place(x = 220, y = 100, width = 100 )
 
@@ -187,7 +187,7 @@ class Main_window(object):
 		self.window.protocol("WM_DELETE_WINDOW",self.on_close )
 		self.width = 1280
 		self.height = 700
-		self.num_rows = 0
+		self.num_rows = 1
 		self.num_cols = 7
 
 		self.bk = PhotoImage(file="bk.gif")
@@ -226,7 +226,7 @@ class Main_window(object):
 		# Create a text/plain message
 		text = "Dear " + details[0] + ",\n"
 		text += "You have booked jeep no." + details[4] + " with driver " + details[5] + " to " + details[6] + "."
-		text += "The driver's cell phone number is " + cell_num + ", should you need to contact him directly.\n"
+		text += "The driver's cell phone number is " + cell_num + ", should you need to contact him.\n"
 		text += "Thank you,\nSincerely,\nMUWCI Transport Office.\n"		
 
 		msg = MIMEText(text)
@@ -257,8 +257,9 @@ class Main_window(object):
 					for line in lines:
 						self.detail_list.append(line.split("$#$ "))
 				else:
+					self.num_rows = 1
 					self.detail_list.append(["Name","Email","Wada","Room","Jeep no.","Driver","Destination"])
-		except Exception:
+		except Exception as e:
 			os.system("touch jeep_details.txt")
 		#should read from a file and adds everything to the detail_list.
 	
@@ -270,7 +271,6 @@ class Main_window(object):
 				self.add_jeep.window.destroy()
 			except Exception:
 				pass
-				
 				
 	def save_to_file(self):
 		with open("jeep_details.txt",'w') as fhandler: 
@@ -290,7 +290,5 @@ class Main_window(object):
 	def display_details(self,row):
 		for j in range(self.details_grid.num_cols):
 			self.details_grid.grid_list[row][j].insert(0,self.detail_list[row][j])
-		
-		
 		
 window = Main_window()
