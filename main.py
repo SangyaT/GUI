@@ -38,19 +38,38 @@ class Entry_grid(object):
 	def create_row(self):
 		self.num_rows+=1
 		#add a new checkbox for the new row.
-		#make sure the checkbox displays, 
 		#and also make sure it has a variable in self.check_box_vars
+		self.check_box_vars.append(IntVar())
 		#finally, make sure it is in the self.check_box_list
+		self.check_box_list.append(Checkbutton(self.frame,variable = self.check_box_vars[-1]))
+		self.check_box_list[-1].configure(background="black")
+		#make sure the checkbox is displayed, 
+		self.check_box_list[-1].grid(row=self.num_rows,column = 0)
+		self.grid_list.append([None]*self.num_cols)
 		for i in range(self.num_cols):
-			pass
+			entry = Entry(self.frame,fg="white",justify="center")
+			entry.grid(row=self.num_rows,column=i+1) #places the entry box on the screen
+			entry.configure(background="#660033")
+			entry.configure(highlightbackground="black")
+			self.grid_list[-1][i] = entry
 			#add a new cell on the window (display)
 			#also add this cell to the grid_list so we can access it when we want to set its text
-		self.parent_window.populate_last_row() 
 			
 	def delete_row(self):
-		pass
+		del_row = 0
 		#loop over all checkboxes and see which one is checked, store the index of the resulting checkbox in i
+		for i in range(self.num_rows-1):
+			if (self.check_box_vars[i].get() == 1):
+				del_row = i+1
+				del self.check_box_vars[i]
+				self.check_box_list[i].destroy()
+				del self.check_box_list[i]
+				break
 		#search for destroy all cells that are at row i+1
+		for i in self.grid_list[del_row]:
+			i.destroy()
+
+		del self.grid_list[del_row]
 	
 class Add_jeep_window(object):
 	def __init__(self,parent_window):
@@ -126,6 +145,9 @@ class Add_jeep_window(object):
 	def submit_func(self):
 		LR = 'L'
 		self.parent_window.detail_list.append([self.name_input.get(), self.email_input.get(), self.wada_variable.get(),self.room_variable.get() + LR,self.jeep_input.get(), self.driver_input.get(),self.destination_input.get()])
+		self.parent_window.details_grid.create_row()
+		self.parent_window.populate_last_row()
+		#self.parent_window.send_email(-1)
 		self.window.destroy()
 	
 
@@ -154,29 +176,30 @@ class Main_window(object):
 		self.del_jeep.configure(background="#000000")
 		self.del_jeep.place(x = 600, y = self.height - 100, width = 100)
 		
-		self.detail_list = [["Name","Email","Wada","Room","Jeep no.","Driver","Destination"],["Sangya", "sangya@muwci.edu", "1", "8L", "190A", "Surendre","Pune Phoenix mall"], ["Spandan", "spandan@muwci.edu", "1", "7L","1765", "Chandan", "Nepal",]]
+		self.detail_list = [["Name","Email","Wada","Room","Jeep no.","Driver","Destination"],["Sangya", "trishutiwari@gmail.com", "1", "8L", "190A", "Surendre","Pune Phoenix mall"], ["Spandan", "spandan@muwci.edu", "1", "7L","1765", "Chandan", "Nepal"]]
 		
 		self.details_grid = Entry_grid(self,3,7)
 		self.display_details()
 
 		self.window.mainloop()
 
-	def populate_last_row():
+	def populate_last_row(self):
 		#takes the elements stored in the last list of self.detail_list and populates the last row of the entrygrid
-		self.send_email(-1)
+		pass
 	
-	def send_email(self,index)
-		details = self.detail_list[-1]
-		recievers = ", ".join(details[1].split(",").strip())
+	def send_email(self,index):
+		details = self.detail_list[index]
+		recievers = details[1].split(",")
+		recievers = ", ".join([i.strip() for i in recievers])
 		cell_num = "+9193904394"
-		sender = "satiwari@muwci.net"
-		password = "pass"
+		sender = "trishutiwari@gmail.com"
+		password = "bangalore12"
 
 		# Create a text/plain message
 		text = "Dear " + details[0] + ",\n"
 		text += "You have booked jeep no." + details[4] + " with driver " + details[5] + " to " + details[6] + "."
-		text += "The driver's cell phone number is " + cell_num + " should you need to contact him directly.\n"
-		text += "Thank you,\nSincerely, MUWCI Transport Office.\n"		
+		text += "The driver's cell phone number is " + cell_num + ", should you need to contact him directly.\n"
+		text += "Thank you,\nSincerely,\nMUWCI Transport Office.\n"		
 
 		msg = MIMEText(text)
 
@@ -184,15 +207,15 @@ class Main_window(object):
 		msg['From'] = sender
 		msg['To'] = recievers
 		
-		with SMTP_SSL(host="smtp.gmail.com",port=465) as client:
-			client.ehlo()
+		with SMTP_SSL(host="smtp.gmail.com",port=465) as pipeline:
+			pipeline.ehlo()
 			try:
-				client.login(username,password)
+				pipeline.login(sender,password)
 			except SMTPAuthenticationError as e:
 				tkMessageBox.showerror("Authentication Failure","Could not login to {0}".format(sender))
 				return
 			try:
-				client.sendmail(sender,recievers,msg.as_string())
+				pipeline.sendmail(sender,recievers,msg.as_string())
 			except SMTPRecipientsRefused as e:
 				tkMessageBox.showerror("Email Not Sent","Could not send emails to {0}".format(", ".join(e.keys())))
 				return
@@ -212,6 +235,7 @@ class Main_window(object):
 		
 	def del_jeep_func(self):
 		self.details_grid.delete_row()
+		
 	
 	def display_details(self):
 		for i in range(self.details_grid.num_rows):
