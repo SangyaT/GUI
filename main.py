@@ -28,7 +28,14 @@ class Entry_grid(object):
 	def create_grid_cells(self):
 		self.grid_list = [None]*self.num_rows
 		#initialize grid list
-		for i in range(self.num_rows):
+		for j in range(self.num_cols):
+			self.grid_list[0] = [None]*self.num_cols
+			entry = Button(self.frame,fg="white",text=self.parent_window.detail_list[0][j],command=self.parent_window.sort_by_field(j))
+			entry.grid(row=0,column= j+1) #offset by 1 because the checkboxes occupy column 0
+			entry.configure(background="#660033")
+			entry.configure(highlightbackground="black")
+			self.grid_list[0][j] = entry
+		for i in range(1,self.num_rows):
 			self.grid_list[i] = [None]*self.num_cols
 			for j in range(self.num_cols):
 				entry = Entry(self.frame,fg="white",justify="center")
@@ -89,11 +96,12 @@ class Add_jeep_window(object):
 		self.add_lr()
 		self.add_jeep()
 		self.add_driver()
+		self.add_time()
 		self.add_destination()		
 		self.add_email()
 
 		self.submit = Button(self.window,text = 'Submit', command = self.submit_func)
-		self.submit.place(x=220, y=400, width = 100)
+		self.submit.place(x=220, y=450, width = 100)
 	
 	def create_add_jeep_window(self):
 		self.window = Tk()
@@ -145,11 +153,17 @@ class Add_jeep_window(object):
 		self.driver_input = Entry(self.window, bd =5)
 		self.driver_input.place(x=220,y=300,width =100)
 
-	def add_destination(self):
-		self.destination_label = Label(self.window,text="Destination")
+	def add_time(self):
+		self.destination_label = Label(self.window,text="Time")
 		self.destination_label.place(x = 50, y=350, width = 100)
 		self.destination_input = Entry(self.window, bd =5)
 		self.destination_input.place(x=220,y=350,width = 100)
+
+	def add_destination(self):
+		self.destination_label = Label(self.window,text="Destination")
+		self.destination_label.place(x = 50, y=400, width = 100)
+		self.destination_input = Entry(self.window, bd =5)
+		self.destination_input.place(x=220,y=400,width = 100)
 
 	def submit_func(self):
 		if self.name_input.get() == "" or self.email_input.get() == "" or self.jeep_input.get() == "" or self.driver_input.get() == "" or self.destination_input.get() == "":
@@ -176,7 +190,7 @@ class Main_window(object):
 		
 		self.details_grid = Entry_grid(self,self.num_rows,self.num_cols)
 
-		for i in range(self.details_grid.num_rows):
+		for i in range(1,self.details_grid.num_rows):
 			self.display_details(i)
 
 		self.window.mainloop()
@@ -187,7 +201,7 @@ class Main_window(object):
 		self.width = 1280
 		self.height = 700
 		self.num_rows = 1
-		self.num_cols = 7
+		self.num_cols = 8
 
 		self.bk = PhotoImage(file="bk.gif")
 		self.bk = self.bk.zoom(2,2)
@@ -257,7 +271,7 @@ class Main_window(object):
 						self.detail_list.append(line.split("$#$ "))
 				else:
 					self.num_rows = 1
-					self.detail_list.append(["Name","Email","Wada","Room","Jeep no.","Driver","Destination"])
+					self.detail_list.append(["Name","Email","Wada","Room","Jeep no.","Driver","Time","Destination"])
 		except Exception as e:
 			os.system("touch jeep_details.txt")
 		#should read from a file and adds everything to the detail_list.
@@ -288,6 +302,19 @@ class Main_window(object):
 	
 	def display_details(self,row):
 		for j in range(self.details_grid.num_cols):
+			self.details_grid.grid_list[row][j].delete(0, 'end')
 			self.details_grid.grid_list[row][j].insert(0,self.detail_list[row][j])
+
+	
+	def sort_by_field(self,index):
+		to_sort = self.detail_list[1:]
+		to_sort.sort(key=lambda x: x[index])
+		self.detail_list = [self.detail_list[0]] + to_sort
+		for i in range(1,self.num_rows):
+			self.display_details(i)
+	
+	
+		
+	
 		
 window = Main_window()

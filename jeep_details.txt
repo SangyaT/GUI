@@ -1,1 +1,3 @@
-Name$#$ Email$#$ Wada$#$ Room$#$ Jeep no.$#$ Driver$#$ Destination
+Name$#$ Email$#$ Wada$#$ Room$#$ Jeep no.$#$ Driver$#$ Time$#$ Destination
+s$#$ s$#$ 1$#$ 1L$#$ s$#$ s$#$ s
+a$#$ d$#$ 1$#$ 1$#$ d$#$ dd$#$ d
