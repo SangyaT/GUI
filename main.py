@@ -6,17 +6,19 @@ from email.mime.text import MIMEText
 from tkinter import messagebox
 import os
 
+#global variables
+button_index = 0
+
 class Entry_grid(object):
 	def __init__(self,parent_window,num_rows,num_cols):
 		self.num_rows = num_rows
 		self.num_cols = num_cols
 		self.parent_window = parent_window
-		self.frame = Frame(self.parent_window.window,width = self.parent_window.width-35, height = 400)
+		self.frame = Frame(self.parent_window.window,width = self.parent_window.width - 35, height = 400)
 		self.frame.place(x = 50, y = 50)
-
 		self.create_check_boxes()
 		self.create_grid_cells()
-		
+
 	def create_check_boxes(self):
 		self.check_box_vars = [IntVar() for i in range(self.num_rows-1)]
 		self.check_box_list = [Checkbutton(self.frame,variable = self.check_box_vars[i]) for i in range(self.num_rows-1)]
@@ -24,21 +26,14 @@ class Entry_grid(object):
 		for i in range(self.num_rows-1):
 			self.check_box_list[i].configure(background="black")
 			self.check_box_list[i].grid(row=i+1,column = 0)
-	
+
 	def create_grid_cells(self):
 		self.grid_list = [None]*self.num_rows
 		#initialize grid list
-		for j in range(self.num_cols):
-			self.grid_list[0] = [None]*self.num_cols
-			entry = Button(self.frame,fg="white",text=self.parent_window.detail_list[0][j],command=self.parent_window.sort_by_field(j))
-			entry.grid(row=0,column= j+1) #offset by 1 because the checkboxes occupy column 0
-			entry.configure(background="#660033")
-			entry.configure(highlightbackground="black")
-			self.grid_list[0][j] = entry
 		for i in range(1,self.num_rows):
 			self.grid_list[i] = [None]*self.num_cols
 			for j in range(self.num_cols):
-				entry = Entry(self.frame,fg="white",justify="center")
+				entry = Entry(self.frame,fg="white",width=17,justify="center")
 				entry.grid(row=i,column= j+1) #offset by 1 because the checkboxes occupy column 0
 				entry.configure(background="#660033")
 				entry.configure(highlightbackground="black")
@@ -176,8 +171,6 @@ class Add_jeep_window(object):
 		#self.parent_window.send_email(-1)
 		self.window.destroy()
 	
-
-
 class Main_window(object):
 	def __init__(self):
 		self.create_main_window()
@@ -189,6 +182,7 @@ class Main_window(object):
 		self.add_to_list()
 		
 		self.details_grid = Entry_grid(self,self.num_rows,self.num_cols)
+		self.create_buttons(self.details_grid)
 
 		for i in range(1,self.details_grid.num_rows):
 			self.display_details(i)
@@ -197,7 +191,7 @@ class Main_window(object):
 
 	def create_main_window(self):
 		self.window = Tk()
-		self.window.protocol("WM_DELETE_WINDOW",self.on_close )
+		self.window.protocol("WM_DELETE_WINDOW",self.on_close)
 		self.width = 1280
 		self.height = 700
 		self.num_rows = 1
@@ -260,6 +254,31 @@ class Main_window(object):
 			except SMTPRecipientsRefused as e:
 				messagebox.showerror("Email Not Sent","Could not send emails to {0}".format(", ".join(e.keys())))
 				return
+
+	def create_buttons(self,entry_obj):
+		for j in range(self.num_cols):
+			entry_obj.grid_list[0] = [None]*self.num_cols
+			entry = Button(entry_obj.frame,fg = "white",width = 14, text = self.detail_list[0][j])
+			entry.grid(row = 0,column = j+1) #offset by 1 because the checkboxes occupy column 0
+			entry.configure(background = "#660033")
+			entry.configure(highlightbackground = "black")
+			entry_obj.grid_list[0][j] = entry
+			if j == 0:
+				entry.configure(command = lambda: self.sort_by_field(0))
+			elif j == 1:	
+				entry.configure(command = lambda: self.sort_by_field(1))
+			elif j == 2:
+				entry.configure(command = lambda: self.sort_by_field(2))
+			elif j == 3:
+				entry.configure(command = lambda: self.sort_by_field(3))
+			elif j == 4:
+				entry.configure(command = lambda: self.sort_by_field(4))
+			elif j == 5:
+				entry.configure(command = lambda: self.sort_by_field(5))
+			elif j == 6:
+				entry.configure(command = lambda: self.sort_by_field(6))
+			elif j == 7:
+				entry.configure(command = lambda: self.sort_by_field(7))
 		
 	def add_to_list(self):
 		try:
@@ -299,12 +318,10 @@ class Main_window(object):
 	def del_jeep_func(self):
 		self.details_grid.delete_row()
 		
-	
 	def display_details(self,row):
-		for j in range(self.details_grid.num_cols):
+		for j in range(self.num_cols):
 			self.details_grid.grid_list[row][j].delete(0, 'end')
 			self.details_grid.grid_list[row][j].insert(0,self.detail_list[row][j])
-
 	
 	def sort_by_field(self,index):
 		to_sort = self.detail_list[1:]
@@ -312,9 +329,5 @@ class Main_window(object):
 		self.detail_list = [self.detail_list[0]] + to_sort
 		for i in range(1,self.num_rows):
 			self.display_details(i)
-	
-	
-		
-	
 		
 window = Main_window()
