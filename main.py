@@ -279,6 +279,8 @@ class Main_window(object):
 				entry.configure(command = lambda: self.sort_by_field(6))
 			elif j == 7:
 				entry.configure(command = lambda: self.sort_by_field(7))
+			else:
+				pass
 		
 	def add_to_list(self):
 		try:
