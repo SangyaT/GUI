@@ -4,7 +4,6 @@ from tkinter import *
 from smtplib import SMTP_SSL,SMTPRecipientsRefused,SMTPAuthenticationError
 from email.mime.text import MIMEText
 from tkinter import messagebox
-import os
 
 #global variables
 button_index = 0
@@ -294,7 +293,8 @@ class Main_window(object):
 					self.num_rows = 1
 					self.detail_list.append(["Name","Email","Wada","Room","Jeep no.","Driver","Time","Destination"])
 		except Exception as e:
-			os.system("touch jeep_details.txt")
+			f = open("jeep_details.txt","a")
+			f.close()
 		#should read from a file and adds everything to the detail_list.
 	
 	def on_close(self):
