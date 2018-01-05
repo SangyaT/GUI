@@ -294,6 +294,8 @@ class Main_window(object):
 					self.detail_list.append(["Name","Email","Wada","Room","Jeep no.","Driver","Time","Destination"])
 		except Exception as e:
 			f = open("jeep_details.txt","a")
+			self.num_rows = 1
+			self.detail_list.append(["Name","Email","Wada","Room","Jeep no.","Driver","Time","Destination"])
 			f.close()
 		#should read from a file and adds everything to the detail_list.
 	
