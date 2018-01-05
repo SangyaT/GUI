@@ -160,7 +160,7 @@ class Add_jeep_window(object):
 		self.destination_input.place(x=220,y=400,width = 100)
 
 	def submit_func(self):
-		if self.name_input.get() == "" or self.email_input.get() == "" or self.jeep_input.get() == "" or self.driver_input.get() == "" or self.destination_input.get() == "":
+		if self.name_input.get() == "" or self.email_input.get() == "" or self.jeep_input.get() == "" or self.driver_input.get() == "" or self.time_input.get() == "" or self.destination_input.get() == "":
 			messagebox.showerror("Empty Fields","One or more fields are empty. Please fill up everything")
 			return
 
