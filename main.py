@@ -148,10 +148,10 @@ class Add_jeep_window(object):
 		self.driver_input.place(x=220,y=300,width =100)
 
 	def add_time(self):
-		self.destination_label = Label(self.window,text="Time")
-		self.destination_label.place(x = 50, y=350, width = 100)
-		self.destination_input = Entry(self.window, bd =5)
-		self.destination_input.place(x=220,y=350,width = 100)
+		self.time_label = Label(self.window,text="Time")
+		self.time_label.place(x = 50, y=350, width = 100)
+		self.time_input = Entry(self.window, bd =5)
+		self.time_input.place(x=220,y=350,width = 100)
 
 	def add_destination(self):
 		self.destination_label = Label(self.window,text="Destination")
@@ -164,7 +164,7 @@ class Add_jeep_window(object):
 			messagebox.showerror("Empty Fields","One or more fields are empty. Please fill up everything")
 			return
 
-		self.parent_window.detail_list.append([self.name_input.get(), self.email_input.get(), self.wada_variable.get(),self.room_variable.get() + self.radio_var.get(),self.jeep_input.get(), self.driver_input.get(),self.destination_input.get()])
+		self.parent_window.detail_list.append([self.name_input.get(), self.email_input.get(), self.wada_variable.get(),self.room_variable.get() + self.radio_var.get(),self.jeep_input.get(), self.driver_input.get(),self.time_input.get(),self.destination_input.get()])
 		self.parent_window.details_grid.create_row()
 		self.parent_window.display_details(-1)
 		#self.parent_window.send_email(-1)
