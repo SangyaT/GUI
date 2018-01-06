@@ -1,4 +1,3 @@
 Name$#$ Email$#$ Wada$#$ Room$#$ Jeep no.$#$ Driver$#$ Time$#$ Destination
-Rani$#$ sangya2000@gmail.com$#$ 3$#$ 2L$#$ 2$#$ Sohan$#$ 12:00$#$ Paud
-Sangya$#$ sangya2000@gmail.com$#$ 3$#$ 6L$#$ 3$#$ Sanjay$#$ 19:34$#$ Pune
-kds$#$ scd$#$ 1$#$ 1L$#$ sd$#$ sd$#$ sf$#$ df
+Sangya$#$ sangya2000@gmail.com$#$ 2$#$ 4L$#$ 23$#$ Sohan$#$ 12:00$#$ Pune
+Rani$#$ rani_email@gmail.com$#$ 4$#$ 10L$#$ 45$#$ Mohan$#$ 13:00$#$ Paud

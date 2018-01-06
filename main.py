@@ -132,8 +132,8 @@ class Add_jeep_window(object):
 
 	def add_lr(self):
 		self.radio_var = StringVar(master=self.window)
-		self.left = Radiobutton(self.window, variable=self.radio_var,value="L", text="Left").place(x = 340, y = 200, width = 50)
-		self.right = Radiobutton(self.window,variable=self.radio_var,value="R", text="Right").place(x = 410, y = 200, width = 50)
+		self.left = Radiobutton(self.window, variable=self.radio_var,value="L", text="Left").place(x = 340, y = 200, width = 53)
+		self.right = Radiobutton(self.window,variable=self.radio_var,value="R", text="Right").place(x = 410, y = 200, width = 53)
 
 	def add_jeep(self):
 		self.jeep_label = Label(self.window,text="Jeep Number")
@@ -167,7 +167,8 @@ class Add_jeep_window(object):
 		self.parent_window.detail_list.append([self.name_input.get(), self.email_input.get(), self.wada_variable.get(),self.room_variable.get() + self.radio_var.get(),self.jeep_input.get(), self.driver_input.get(),self.time_input.get(),self.destination_input.get()])
 		self.parent_window.details_grid.create_row()
 		self.parent_window.display_details(-1)
-		# self.parent_window.send_email(-1)
+		# send email
+		self.parent_window.send_email(-1)
 		self.window.destroy()
 	
 class Main_window(object):
@@ -251,7 +252,7 @@ class Main_window(object):
 			try:
 				pipeline.sendmail(sender,recievers,msg.as_string())
 			except SMTPRecipientsRefused as e:
-				messagebox.showerror("Email Not Sent","Could not send emails to {0}".format(", ".join(e.keys())))
+				messagebox.showerror("Email Not Sent","Could not send emails to {0}".format(", ".join(e.recipients.keys())))
 				return
 
 	def create_buttons(self,entry_obj):
