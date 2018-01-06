@@ -50,7 +50,7 @@ class Entry_grid(object):
 		self.check_box_list[-1].grid(row=self.num_rows,column = 0)
 		self.grid_list.append([None]*self.num_cols)
 		for i in range(self.num_cols):
-			entry = Entry(self.frame,fg="white",justify="center")
+			entry = Entry(self.frame,fg="white",width=17,justify="center")
 			entry.grid(row=self.num_rows,column=i+1) #places the entry box on the screen
 			entry.configure(background="#660033")
 			entry.configure(highlightbackground="black")
@@ -167,7 +167,7 @@ class Add_jeep_window(object):
 		self.parent_window.detail_list.append([self.name_input.get(), self.email_input.get(), self.wada_variable.get(),self.room_variable.get() + self.radio_var.get(),self.jeep_input.get(), self.driver_input.get(),self.time_input.get(),self.destination_input.get()])
 		self.parent_window.details_grid.create_row()
 		self.parent_window.display_details(-1)
-		#self.parent_window.send_email(-1)
+		# self.parent_window.send_email(-1)
 		self.window.destroy()
 	
 class Main_window(object):
@@ -226,8 +226,8 @@ class Main_window(object):
 		recievers = details[1].split(",")
 		recievers = ", ".join([i.strip() for i in recievers])
 		cell_num = "+9193904394"
-		sender = "trishutiwari@gmail.com"
-		password = "bangalore12"
+		sender = "sangya2000@gmail.com"
+		password = "mumbai12"
 
 		# Create a text/plain message
 		text = "Dear " + details[0] + ",\n"
