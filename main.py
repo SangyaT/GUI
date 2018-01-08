@@ -163,8 +163,11 @@ class Add_jeep_window(object):
 		if self.name_input.get() == "" or self.email_input.get() == "" or self.jeep_input.get() == "" or self.driver_input.get() == "" or self.time_input.get() == "" or self.destination_input.get() == "":
 			messagebox.showerror("Empty Fields","One or more fields are empty. Please fill up everything")
 			return
-
 		self.parent_window.detail_list.append([self.name_input.get(), self.email_input.get(), self.wada_variable.get(),self.room_variable.get() + self.radio_var.get(),self.jeep_input.get(), self.driver_input.get(),self.time_input.get(),self.destination_input.get()])
+		if not self.parent_window.send_email(-1):
+			del self.parent_window.detail_list[-1]
+			return
+
 		self.parent_window.details_grid.create_row()
 		self.parent_window.display_details(-1)
 		# send email
@@ -248,12 +251,13 @@ class Main_window(object):
 				pipeline.login(sender,password)
 			except SMTPAuthenticationError as e:
 				messagebox.showerror("Authentication Failure","Could not login to {0}".format(sender))
-				return
+				return False
 			try:
 				pipeline.sendmail(sender,recievers,msg.as_string())
 			except SMTPRecipientsRefused as e:
-				messagebox.showerror("Email Not Sent","Could not send emails to {0}".format(", ".join(e.recipients.keys())))
-				return
+				messagebox.showerror("Email Not Sent","Invalid email address: {0}".format(", ".join(e.recipients.keys())))
+				return False
+		return True
 
 	def create_buttons(self,entry_obj):
 		for j in range(self.num_cols):
