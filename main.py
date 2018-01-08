@@ -232,7 +232,7 @@ class Main_window(object):
 
 		# Create a text/plain message
 		text = "Dear " + details[0] + ",\n"
-		text += "You have booked jeep no." + details[4] + " with driver " + details[5] + " to " + details[6] + "."
+		text += "You have booked jeep no." + details[4] + " with driver " + details[5] + " to " + details[7] + " at " + details[6] + "."
 		text += "The driver's cell phone number is " + cell_num + ", should you need to contact him.\n"
 		text += "Thank you,\nSincerely,\nMUWCI Transport Office.\n"		
 
