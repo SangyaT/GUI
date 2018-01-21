@@ -4,6 +4,7 @@ from tkinter import *
 from smtplib import SMTP_SSL,SMTPRecipientsRefused,SMTPAuthenticationError
 from email.mime.text import MIMEText
 from tkinter import messagebox
+import datetime
 
 #global variables
 button_index = 0
@@ -212,15 +213,20 @@ class Main_window(object):
 	def create_add_jeep_button(self):
 		self.add_jeep = Button(self.window, text = 'Add a jeep', command = self.add_jeep_func,fg="white")
 		self.add_jeep.configure(background="#000000")
-		self.add_jeep.place(x = 450, y = self.height - 100, width = 100)
+		self.add_jeep.place(x = 400, y = self.height - 100, width = 100)
 
 	def create_del_jeep_button(self):
 		self.del_jeep = Button(self.window, text = 'Delete a jeep', command = self.del_jeep_func,fg="white")
 		self.del_jeep.configure(background="#000000")
-		self.del_jeep.place(x = 570, y = self.height - 100, width = 100)
+		self.del_jeep.place(x = 520, y = self.height - 100, width = 100)
 
 	def create_save_file_button(self):
 		self.save_file = Button(self.window, text = 'Save file', command = self.save_to_file,fg="white")
+		self.save_file.configure(background="#000000")
+		self.save_file.place(x = 640, y = self.height - 100, width = 100)
+
+	def create_save_file_button(self):
+		self.save_file = Button(self.window, text = 'Print Bill', command = self.print_bill,fg="white")
 		self.save_file.configure(background="#000000")
 		self.save_file.place(x = 690, y = self.height - 100, width = 100)
 
@@ -318,6 +324,14 @@ class Main_window(object):
 		with open("jeep_details.txt",'w') as fhandler: 
 			for line in self.detail_list:
 				l="$#$ ".join(line)
+				fhandler.write(l+"\n")
+
+	def print_bill(self):
+		now = datetime.datetime.now()
+		with open(now + ".txt",'w') as fhandler: 
+			fhandler.write("Bill at " + now + "\n\n")
+			for line in self.detail_list:
+				l = " ".join(line)
 				fhandler.write(l+"\n")
 
 	def add_jeep_func(self):
