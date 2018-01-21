@@ -94,13 +94,14 @@ class Add_jeep_window(object):
 		self.add_time()
 		self.add_destination()		
 		self.add_email()
+		self.add_date()
 
 		self.submit = Button(self.window,text = 'Submit', command = self.submit_func)
-		self.submit.place(x=220, y=450, width = 100)
+		self.submit.place(x=220, y=500, width = 100)
 	
 	def create_add_jeep_window(self):
 		self.window = Tk()
-		self.window.geometry("500x500")
+		self.window.geometry("500x600")
 		self.window.resizable(width=False, height=False)
 
 	def add_name(self):
@@ -149,22 +150,45 @@ class Add_jeep_window(object):
 		self.driver_input.place(x=220,y=300,width =100)
 
 	def add_time(self):
-		self.time_label = Label(self.window,text="Time")
+		self.time_label = Label(self.window,text="Time (HH:MM)")
 		self.time_label.place(x = 50, y=350, width = 100)
-		self.time_input = Entry(self.window, bd =5)
-		self.time_input.place(x=220,y=350,width = 100)
+		self.hour_variable = StringVar(self.window)
+		self.hour_variable.set("00") 
+		self.hour_input = OptionMenu(self.window, self.hour_variable, "00","01", "02", "03", "04", "05", "06","07", "08", "09","10","11","12","13","14","15","16","17","18","19","20","21","22","23")
+		self.hour_input.place(x=220,y=350,width = 50)
+		self.minute_variable = StringVar(self.window)
+		self.minute_variable.set("00")
+		self.minute_input = OptionMenu(self.window, self.minute_variable, "00","01", "02", "03", "04", "05", "06","07", "08", "09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44 ","45","46","47","48","49", "50","51","52","53","54","55","56","57","58","59")
+		self.minute_input.place(x=290,y=350,width = 50)
+		
+
+	def add_date(self):
+		self.date_label = Label(self.window,text="Date (DD/MM/YY)")
+		self.date_label.place(x = 50, y=400, width = 100)
+		self.day_variable = StringVar(self.window)
+		self.day_variable.set("01")
+		self.day_input = OptionMenu(self.window, self.day_variable, "01", "02", "03", "04", "05", "06","07", "08", "09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31")
+		self.day_input.place(x=220,y=400,width = 50)
+		self.month_variable = StringVar(self.window)
+		self.month_variable.set("01")
+		self.month_input = OptionMenu(self.window, self.month_variable, "01", "02", "03", "04", "05", "06","07", "08", "09","10","11","12")
+		self.month_input.place(x=290,y=400,width = 50)
+		self.year_variable = StringVar(self.window)
+		self.year_variable.set("2018")
+		self.year_input = OptionMenu(self.window, self.year_variable, "2017", "2018", "2019", "2020", "2021")
+		self.year_input.place(x=360,y=400,width = 100)
 
 	def add_destination(self):
 		self.destination_label = Label(self.window,text="Destination")
-		self.destination_label.place(x = 50, y=400, width = 100)
+		self.destination_label.place(x = 50, y=450, width = 100)
 		self.destination_input = Entry(self.window, bd =5)
-		self.destination_input.place(x=220,y=400,width = 100)
+		self.destination_input.place(x=220,y=450,width = 100)
 
 	def submit_func(self):
-		if self.name_input.get() == "" or self.email_input.get() == "" or self.jeep_input.get() == "" or self.driver_input.get() == "" or self.time_input.get() == "" or self.destination_input.get() == "":
+		if self.name_input.get() == "" or self.email_input.get() == "" or self.jeep_input.get() == "" or self.driver_input.get() == "" or  self.destination_input.get() == "":
 			messagebox.showerror("Empty Fields","One or more fields are empty. Please fill up everything")
 			return
-		self.parent_window.detail_list.append([self.name_input.get(), self.email_input.get(), self.wada_variable.get(),self.room_variable.get() + self.radio_var.get(),self.jeep_input.get(), self.driver_input.get(),self.time_input.get(),self.destination_input.get()])
+		self.parent_window.detail_list.append([self.name_input.get(), self.email_input.get(), self.wada_variable.get(),self.room_variable.get() + self.radio_var.get(),self.jeep_input.get(), self.driver_input.get(),self.day_variable.get() + '/' + self.month_variable.get() + '/' + self.year_variable.get(),self.hour_variable.get() + ':' + self.minute_variable.get(),self.destination_input.get()])
 		if not self.parent_window.send_email(-1):
 			del self.parent_window.detail_list[-1]
 			return
@@ -181,6 +205,7 @@ class Main_window(object):
 		self.create_add_jeep_button()
 		self.create_del_jeep_button()
 		self.create_save_file_button()
+		self.create_print_bill_button()
 		
 		self.detail_list = list()
 		self.add_to_list()
@@ -196,10 +221,10 @@ class Main_window(object):
 	def create_main_window(self):
 		self.window = Tk()
 		self.window.protocol("WM_DELETE_WINDOW",self.on_close)
-		self.width = 1280
+		self.width = 1400
 		self.height = 700
 		self.num_rows = 1
-		self.num_cols = 8
+		self.num_cols = 9
 
 		self.bk = PhotoImage(file="bk.gif")
 		self.bk = self.bk.zoom(2,2)
@@ -213,22 +238,22 @@ class Main_window(object):
 	def create_add_jeep_button(self):
 		self.add_jeep = Button(self.window, text = 'Add a jeep', command = self.add_jeep_func,fg="white")
 		self.add_jeep.configure(background="#000000")
-		self.add_jeep.place(x = 400, y = self.height - 100, width = 100)
+		self.add_jeep.place(x = 450, y = self.height - 100, width = 100)
 
 	def create_del_jeep_button(self):
 		self.del_jeep = Button(self.window, text = 'Delete a jeep', command = self.del_jeep_func,fg="white")
 		self.del_jeep.configure(background="#000000")
-		self.del_jeep.place(x = 520, y = self.height - 100, width = 100)
+		self.del_jeep.place(x = 570, y = self.height - 100, width = 100)
 
 	def create_save_file_button(self):
 		self.save_file = Button(self.window, text = 'Save file', command = self.save_to_file,fg="white")
 		self.save_file.configure(background="#000000")
-		self.save_file.place(x = 640, y = self.height - 100, width = 100)
+		self.save_file.place(x = 690, y = self.height - 100, width = 100)
 
-	def create_save_file_button(self):
+	def create_print_bill_button(self):
 		self.save_file = Button(self.window, text = 'Print Bill', command = self.print_bill,fg="white")
 		self.save_file.configure(background="#000000")
-		self.save_file.place(x = 690, y = self.height - 100, width = 100)
+		self.save_file.place(x = 810, y = self.height - 100, width = 100)
 
 
 	def send_email(self,index):
@@ -241,7 +266,7 @@ class Main_window(object):
 
 		# Create a text/plain message
 		text = "Dear " + details[0] + ",\n"
-		text += "You have booked jeep no." + details[4] + " with driver " + details[5] + " to " + details[7] + " at " + details[6] + "."
+		text += "You have booked jeep no." + details[4] + " with driver " + details[5] + " to " + details[8] + " at " + details[7] + " on " + details[6]
 		text += "The driver's cell phone number is " + cell_num + ", should you need to contact him.\n"
 		text += "Thank you,\nSincerely,\nMUWCI Transport Office.\n"		
 
@@ -289,6 +314,8 @@ class Main_window(object):
 				entry.configure(command = lambda: self.sort_by_field(6))
 			elif j == 7:
 				entry.configure(command = lambda: self.sort_by_field(7))
+			elif j == 8:
+				entry.configure(command = lambda: self.sort_by_field(8))
 			else:
 				pass
 		
@@ -302,11 +329,11 @@ class Main_window(object):
 						self.detail_list.append(line.split("$#$ "))
 				else:
 					self.num_rows = 1
-					self.detail_list.append(["Name","Email","Wada","Room","Jeep no.","Driver","Time","Destination"])
+					self.detail_list.append(["Name","Email","Wada","Room","Jeep no.","Driver","Date","Time","Destination"])
 		except Exception as e:
 			f = open("jeep_details.txt","a")
 			self.num_rows = 1
-			self.detail_list.append(["Name","Email","Wada","Room","Jeep no.","Driver","Time","Destination"])
+			self.detail_list.append(["Name","Email","Wada","Room","Jeep no.","Driver","Date","Time","Destination"])
 			f.close()
 		#should read from a file and adds everything to the detail_list.
 	
@@ -327,12 +354,12 @@ class Main_window(object):
 				fhandler.write(l+"\n")
 
 	def print_bill(self):
-		now = datetime.datetime.now()
+		now = str(datetime.datetime.now())
 		with open(now + ".txt",'w') as fhandler: 
-			fhandler.write("Bill at " + now + "\n\n")
+			fhandler.write("Bill generated at " + now + "\n\n	")
 			for line in self.detail_list:
-				l = " ".join(line)
-				fhandler.write(l+"\n")
+				l = "			".join(line)
+				fhandler.write(l+"\n	")
 
 	def add_jeep_func(self):
 		#call back function for self.add_jeep
