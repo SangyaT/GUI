@@ -267,7 +267,7 @@ class Main_window(object):
 		# Create a text/plain message
 		text = "Dear " + details[0] + ",\n"
 		text += "You have booked jeep no." + details[4] + " with driver " + details[5] + " to " + details[8] + " at " + details[7] + " on " + details[6]
-		text += "The driver's cell phone number is " + cell_num + ", should you need to contact him.\n"
+		text += ". The driver's cell phone number is " + cell_num + ", should you need to contact him.\n"
 		text += "Thank you,\nSincerely,\nMUWCI Transport Office.\n"		
 
 		msg = MIMEText(text)
@@ -358,7 +358,7 @@ class Main_window(object):
 		with open(now + ".txt",'w') as fhandler: 
 			fhandler.write("Bill generated at " + now + "\n\n	")
 			for line in self.detail_list:
-				l = "			".join(line)
+				l = "{: >10} {: >25} {: >10} {: >10} {: >10} {: >10} {: >20} {: >10} {: >20} ".format(*line)
 				fhandler.write(l+"\n	")
 
 	def add_jeep_func(self):
