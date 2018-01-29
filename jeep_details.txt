@@ -1,3 +1,1 @@
 Name$#$ Email$#$ Wada$#$ Room$#$ Jeep no.$#$ Driver$#$ Date$#$ Time$#$ Destination
-Sangya$#$ sangya2000@gmail.com$#$ 3$#$ 9L$#$ 34$#$ Sohan$#$ 10/09/2019$#$ 17:06$#$ Pune
-Rohan$#$ sangya2000@gmail.com$#$ 4$#$ 7R$#$ 345$#$ Mohan$#$ 28/05/2020$#$ 16:32$#$ Mumbai

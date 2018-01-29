@@ -101,6 +101,7 @@ class Add_jeep_window(object):
 	
 	def create_add_jeep_window(self):
 		self.window = Tk()
+		self.window.title("Add Jeep")
 		self.window.geometry("500x600")
 		self.window.resizable(width=False, height=False)
 
@@ -220,6 +221,7 @@ class Main_window(object):
 
 	def create_main_window(self):
 		self.window = Tk()
+		self.window.title("Jeep Booking")
 		self.window.protocol("WM_DELETE_WINDOW",self.on_close)
 		self.width = 1400
 		self.height = 700
