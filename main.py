@@ -357,7 +357,7 @@ class Main_window(object):
 
 	def print_bill(self):
 		now = str(datetime.datetime.now())
-		with open(now + ".txt",'w') as fhandler: 
+		with open("bill-" + now + ".txt",'w') as fhandler: 
 			fhandler.write("Bill generated at " + now + "\n\n	")
 			for line in self.detail_list:
 				l = "{: >10} {: >25} {: >10} {: >10} {: >10} {: >10} {: >20} {: >10} {: >20} ".format(*line)
